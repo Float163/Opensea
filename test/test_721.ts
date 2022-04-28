@@ -12,7 +12,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-wit
 // `describe` receives the name of a section of your test suite, and a callback.
 // The callback must define the tests of that section. This callback can't be
 // an async function.
-describe("Token contract", function () {
+describe("Token contract - 721", function () {
   // Mocha has four functions that let you hook into the test runner's
   // lifecyle. These are: `before`, `beforeEach`, `after`, `afterEach`.
 
@@ -72,46 +72,52 @@ describe("Token contract", function () {
         hardhatToken.connect(addr1).transferFrom(addr1.address, addr2.address, 0)
       ).to.be.revertedWith("ERC721: operator query for nonexistent token");
     });
-/*
+
     it("Should update balances after transfers", async function () {
-      const initialOwnerBalance = await hardhatToken.balanceOf(owner.address);
-      await hardhatToken.transfer(addr1.address, ethers.utils.parseEther('100'));
-      await hardhatToken.transfer(addr2.address, ethers.utils.parseEther('50'));
-      const finalOwnerBalance = await hardhatToken.balanceOf(owner.address);
-      expect(finalOwnerBalance).to.equal(initialOwnerBalance.sub(ethers.utils.parseEther('150')));
-
-      const addr1Balance = await hardhatToken.balanceOf(addr1.address);
-      expect(addr1Balance).to.equal(ethers.utils.parseEther('100'));
-
-      const addr2Balance = await hardhatToken.balanceOf(addr2.address);
-      expect(addr2Balance).to.equal(ethers.utils.parseEther('50'));
+      await hardhatToken.safeMint(addr1.address);              
+      await hardhatToken.connect(addr1).transferFrom(addr1.address, addr2.address, 0);
+      expect(await hardhatToken.balanceOf(addr1.address)).to.equal(0);
+      expect(await hardhatToken.balanceOf(addr2.address)).to.equal(1);
     });
 
     it("Should allowance transfer", async function () {
-      await hardhatToken.connect(addr1).approve(addr2.address, ethers.utils.parseEther('100'));
-      expect(await hardhatToken.allowance(addr1.address, addr2.address)).to.equal(
-        ethers.utils.parseEther('100')
+      await hardhatToken.safeMint(addr1.address);      
+      await hardhatToken.connect(addr1).approve(addr2.address, 0);
+      expect(await hardhatToken.getApproved(0)).to.equal(
+        addr2.address
       );
     });
 
     it("Should transfer token if allowance", async function () {
-      await hardhatToken.mint(addr1.address, ethers.utils.parseEther('200'));
-      await hardhatToken.connect(addr1).approve(addr2.address, ethers.utils.parseEther('100'));
-      await hardhatToken.transferFrom(addr1.address, addr2.address, ethers.utils.parseEther('50'))
+      await hardhatToken.safeMint(addr1.address);            
+      await hardhatToken.connect(addr1).approve(addr2.address, 0);
+      await hardhatToken.connect(addr2).transferFrom(addr1.address, addr2.address, 0)
       const addr1Balance = await hardhatToken.balanceOf(addr1.address);
-      expect(addr1Balance).to.equal(ethers.utils.parseEther('150'));
+      expect(addr1Balance).to.equal(0);
       const addr2Balance = await hardhatToken.balanceOf(addr2.address);
-      expect(addr2Balance).to.equal(ethers.utils.parseEther('50'));
+      expect(addr2Balance).to.equal(1);
+    });
+
+    it("Should fail if allowance doesn’t have id tokens", async function () {
+      await expect(hardhatToken.connect(addr1).approve(addr2.address, 0)
+      ).to.be.revertedWith("ERC721: owner query for nonexistent token");
+    });
+
+    it("Should set approved for all", async function () {
+      await hardhatToken.safeMint(addr1.address);
+      await hardhatToken.connect(addr1).setApprovalForAll(addr2.address, true);
+      expect(await hardhatToken.isApprovedForAll(addr1.address, addr2.address)).to.be.equal(true);
+    });
+
+    it("Should unset approved for all", async function () {
+      await hardhatToken.safeMint(addr1.address);
+      await hardhatToken.connect(addr1).setApprovalForAll(addr2.address, true);
+      expect(await hardhatToken.isApprovedForAll(addr1.address, addr2.address)).to.be.equal(true);
+      await hardhatToken.connect(addr1).setApprovalForAll(addr2.address, false);      
+      expect(await hardhatToken.isApprovedForAll(addr1.address, addr2.address)).to.be.equal(false);      
     });
 
 
-    it("Should fail if allowance doesn’t have enough tokens", async function () {
-      await hardhatToken.connect(addr1).approve(addr2.address, ethers.utils.parseEther('100'));
-      await expect(
-        hardhatToken.transferFrom(addr1.address, addr2.address, ethers.utils.parseEther('101'))
-      ).to.be.revertedWith("No enough token");
-    });
-*/
   });
 
 });
