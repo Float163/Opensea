@@ -11,6 +11,10 @@ async function main() {
 
   await erc1155.deployed();
 
+  await erc1155.mint(owner.address, 0, 1, 0);
+  await erc1155.mint(owner.address, 1, 1, 0);
+  await erc1155.mint(owner.address, 2, 1, 0);
+
   console.log("ERC-1155 deployed to:", erc1155.address);
 }
 

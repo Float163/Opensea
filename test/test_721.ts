@@ -43,7 +43,6 @@ describe("Token contract - 721", function () {
 
   describe("Transactions", function () {
     it("Should mint tokens to accounts", async function () {
-        // Mint 100 tokens from to addr1
         await hardhatToken.safeMint(addr1.address);
         const addr1Balance = await hardhatToken.balanceOf(addr1.address);
         const addr1URI = await hardhatToken.tokenURI(1);

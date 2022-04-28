@@ -47,7 +47,7 @@ describe("Token contract - 1155", function () {
         const addr1Balance = await hardhatToken.balanceOf(addr1.address, 1);
         const addr1URI = await hardhatToken.uri(1);
         expect(addr1Balance).to.equal(10);
-        expect(addr1URI).to.equal('https://gateway.pinata.cloud/ipfs/QmZiCMB1TsjNLoGY26XUkLMjHWs4Mh3R6KGv9uFaWdViPg/');
+        expect(addr1URI).to.equal('https://gateway.pinata.cloud/ipfs/QmZiCMB1TsjNLoGY26XUkLMjHWs4Mh3R6KGv9uFaWdViPg/1');
       });
 
     it("Should fail if mint sender not owner", async function () {
